@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Optimizador de Espacios Pro</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@500&display=swap');
+
+        :root {
+            --primary: #1a73e8;
+            --success: #34a853;
+            --danger: #ea4335;
+            --warning: #fbbc04;
+            --dark: #202124;
+            --surface: #ffffff;
+            --bg: #f0f4ff;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* ── PANTALLA INICIO ── */
+        #pantalla-inicio {
+            text-align: center;
+            padding: 50px 40px;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 60px rgba(26,115,232,0.12);
+            max-width: 480px;
+            width: 100%;
+        }
+
+        .logo-placeholder { font-size: 56px; margin-bottom: 16px; }
+
+        #pantalla-inicio h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 8px;
+        }
+
+        #pantalla-inicio p {
+            color: #5f6368;
+            font-size: 15px;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .btn-principal {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px 36px;
+            font-size: 16px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 4px 18px rgba(26,115,232,0.35);
+            letter-spacing: 0.3px;
+        }
+
+        .btn-principal:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(26,115,232,0.45);
+        }
+
+        /* ── PANEL CONTROL ── */
+        #panel-control {
+            display: none;
+            width: 100%;
+            max-width: 1060px;
+            background: white;
+            padding: 32px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(26,115,232,0.1);
+        }
+
+        .header-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .header-panel h2 {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .btn-volver {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 14px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .btn-volver:hover { background: #e8f0fe; }
+
+        /* ── FORMULARIO AGREGAR EMPRESA ── */
+        .agregar-empresa-box {
+            background: #f0f4ff;
+            border: 2px dashed #a8c4f5;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .agregar-empresa-box label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        .input-empresa {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--dark);
+            background: white;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+        .input-empresa:focus { border-color: var(--primary); }
+        .input-empresa::placeholder { color: #bdc1c6; }
+
+        .btn-agregar {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn-agregar:hover { background: #1558c0; transform: translateY(-1px); }
+
+        /* ── CHIPS DE EMPRESAS ── */
+        .empresa-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e8f0fe;
+            color: var(--primary);
+            border-radius: 20px;
+            padding: 6px 14px 6px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1.5px solid #c5d8fb;
+        }
+
+        .chip-eliminar {
+            background: none;
+            border: none;
+            color: #ea4335;
+            cursor: pointer;
+            font-size: 15px;
+            line-height: 1;
+            padding: 0 2px;
+            border-radius: 50%;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+        }
+        .chip-eliminar:hover { background: #fce8e6; }
+
+        .sin-empresas {
+            color: #9aa0a6;
+            font-size: 13px;
+            font-style: italic;
+            padding: 6px 0;
+        }
+
+        /* ── TABLA ── */
+        .tabla-wrapper { overflow-x: auto; }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 8px; }
+
+        th {
+            background: #f1f3f4;
+            color: var(--dark);
+            padding: 14px 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        td { padding: 4px; text-align: center; }
+
+        .nombre-empresa {
+            text-align: left !important;
+            padding-left: 10px !important;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--dark);
+            white-space: nowrap;
+        }
+
+        .celda {
+            width: 100%;
+            padding: 13px 8px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: 'DM Mono', monospace;
+            font-weight: 500;
+            font-size: 12px;
+            transition: all 0.18s;
+        }
+        .si { background: #e6f4ea; color: var(--success); border: 2px solid #ceead6; }
+        .no { background: #fce8e6; color: var(--danger); border: 2px solid #fad2cf; }
+        .celda:hover { transform: scale(1.04); box-shadow: 0 3px 10px rgba(0,0,0,0.1); }
+
+        /* ── STATS ── */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 16px 12px;
+            border-radius: 14px;
+            text-align: center;
+            border: 1.5px solid var(--border);
+            transition: box-shadow 0.2s;
+        }
+        .stat-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+
+        .stat-label { font-size: 11px; color: #5f6368; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-numero { font-size: 28px; font-weight: 700; color: var(--primary); margin: 4px 0; font-family: 'DM Mono', monospace; }
+        .stat-status { font-size: 12px; font-weight: 600; }
+        .stat-colapso { color: var(--danger); }
+        .stat-ok { color: var(--success); }
+
+        /* ── TABLA VACÍA ── */
+        .tabla-vacia {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9aa0a6;
+        }
+        .tabla-vacia span { font-size: 36px; display: block; margin-bottom: 10px; }
+        .tabla-vacia p { font-size: 14px; }
+
+        /* ── TOAST ── */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--dark);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 999;
+            white-space: nowrap;
+        }
+        #toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA INICIO -->
+    <div id="pantalla-inicio">
+        <div class="logo-placeholder">📊</div>
+        <h1>Álgebra Lineal en Contexto</h1>
+        <p>Sistema Inteligente de Optimización y Manejo de Espacios Empresariales</p>
+        <button class="btn-principal" onclick="entrar()">Comenzar Análisis</button>
+    </div>
+
+    <!-- PANEL CONTROL -->
+    <div id="panel-control">
+        <div class="header-panel">
+            <h2>Panel de Optimización</h2>
+            <button class="btn-volver" onclick="regresar()">← Volver</button>
+        </div>
+
+        <!-- AGREGAR EMPRESA -->
+        <div class="agregar-empresa-box">
+            <label>➕ Agregar Empresa</label>
+            <input
+                type="text"
+                id="input-nueva-empresa"
+                class="input-empresa"
+                placeholder="Ej: Distribuidora Central SAS"
+                maxlength="50"
+                onkeydown="if(event.key==='Enter') agregarEmpresa()"
+            />
+            <button class="btn-agregar" onclick="agregarEmpresa()">Agregar</button>
+        </div>
+
+        <!-- CHIPS EMPRESAS ACTIVAS -->
+        <div class="empresa-chips" id="empresa-chips"></div>
+
+        <!-- TABLA -->
+        <div class="tabla-wrapper">
+            <table id="tabla-interactiva"></table>
+        </div>
+
+        <!-- ESTADÍSTICAS -->
+        <div class="stats-container" id="stats-area"></div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast"></div>
+
+    <script>
+        const recursos = ["Parqueadero", "Sala Juntas", "Oficina"];
+        let empresas = [];
+        let matriz = [];
+
+        // ──────────────────────────────
+        // Navegación
+        // ──────────────────────────────
+        function entrar() {
+            document.getElementById('pantalla-inicio').style.display = 'none';
+            document.getElementById('panel-control').style.display = 'block';
+            dibujar();
+        }
+
+        function regresar() {
+            document.getElementById('pantalla-inicio').style.display = 'block';
+            document.getElementById('panel-control').style.display = 'none';
+        }
+
+        // ──────────────────────────────
+        // Gestión de empresas
+        // ──────────────────────────────
+        function agregarEmpresa() {
+            const input = document.getElementById('input-nueva-empresa');
+            const nombre = input.value.trim();
+
+            if (!nombre) {
+                mostrarToast('⚠️ Escribe el nombre de la empresa');
+                return;
+            }
+            if (empresas.includes(nombre)) {
+                mostrarToast('⚠️ Esa empresa ya está en la lista');
+                return;
+            }
+            if (empresas.length >= 12) {
+                mostrarToast('⚠️ Máximo 12 empresas permitidas');
+                return;
+            }
+
+            empresas.push(nombre);
+            matriz.push([0, 0, 0]); // Empieza todo LIBRE
+            input.value = '';
+            dibujar();
+            mostrarToast(`✅ "${nombre}" agregada`);
+        }
+
+        function eliminarEmpresa(index) {
+            const nombre = empresas[index];
+            empresas.splice(index, 1);
+            matriz.splice(index, 1);
+            dibujar();
+            mostrarToast(`🗑️ "${nombre}" eliminada`);
+        }
+
+        // ──────────────────────────────
+        // Render principal
+        // ──────────────────────────────
+        function dibujar() {
+            dibujarChips();
+            dibujarTabla();
+            dibujarStats();
+        }
+
+        function dibujarChips() {
+            const area = document.getElementById('empresa-chips');
+            if (empresas.length === 0) {
+                area.innerHTML = '<span class="sin-empresas">Aún no has agregado empresas. ¡Comienza arriba!</span>';
+                return;
+            }
+            area.innerHTML = empresas.map((e, i) => `
+                <div class="chip">
+                    ${e}
+                    <button class="chip-eliminar" onclick="eliminarEmpresa(${i})" title="Eliminar empresa">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function dibujarTabla() {
+            const tabla = document.getElementById('tabla-interactiva');
+
+            if (empresas.length === 0) {
+                tabla.innerHTML = `
+                    <tr><td colspan="${recursos.length + 1}">
+                        <div class="tabla-vacia">
+                            <span>🏢</span>
+                            <p>Agrega al menos una empresa para ver la matriz de ocupación</p>
+                        </div>
+                    </td></tr>`;
+                return;
+            }
+
+            let html = `<tr><th>Empresa</th>${recursos.map(r => `<th>${r}</th>`).join('')}</tr>`;
+
+            matriz.forEach((fila, i) => {
+                html += `<tr>
+                    <td class="nombre-empresa">${empresas[i]}</td>
+                    ${fila.map((val, j) => `
+                        <td>
+                            <button class="celda ${val === 1 ? 'si' : 'no'}" onclick="cambiar(${i},${j})">
+                                ${val === 1 ? 'OCUPADO (1)' : 'LIBRE (0)'}
+                            </button>
+                        </td>
+                    `).join('')}
+                </tr>`;
+            });
+
+            tabla.innerHTML = html;
+        }
+
+        function dibujarStats() {
+            const area = document.getElementById('stats-area');
+
+            if (empresas.length === 0) {
+                area.innerHTML = '';
+                return;
+            }
+
+            const total = empresas.length;
+            const totales = [0, 0, 0];
+            matriz.forEach(f => f.forEach((v, j) => { if (v === 1) totales[j]++; }));
+
+            area.innerHTML = recursos.map((r, i) => `
+                <div class="stat-card">
+                    <div class="stat-label">${r}</div>
+                    <div class="stat-numero">${totales[i]}/${total}</div>
+                    <div class="stat-status ${totales[i] === total ? 'stat-colapso' : 'stat-ok'}">
+                        ${totales[i] === total ? '⚠️ COLAPSO' : '✔ Capacidad OK'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ──────────────────────────────
+        // Cambiar estado celda
+        // ──────────────────────────────
+        function cambiar(f, c) {
+            matriz[f][c] = matriz[f][c] === 1 ? 0 : 1;
+            dibujar();
+        }
+
+        // ──────────────────────────────
+        // Toast de notificaciones
+        // ──────────────────────────────
+        function mostrarToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
+    </script>
+</body>
+</html>
